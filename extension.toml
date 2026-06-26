@@ -1,0 +1,10 @@
+id = "cangjie"
+name = "Cangjie"
+description = "Cangjie language."
+version = "0.0.1"
+schema_version = 1
+authors = [""]
+repository = "https://github.com/xiashuangxi/zed-cangjie-language"
+
+[language_servers.cls]
+language = "Cangjie"
