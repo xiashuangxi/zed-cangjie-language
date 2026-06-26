@@ -55,7 +55,7 @@ jobs:
           mkdir -p package/grammars
           mkdir -p package/languages/cangjie
 
-          cp target/wasm32-wasip1/release/*.wasm package/extension.wasm
+          # cp target/wasm32-wasip1/release/*.wasm package/extension.wasm
           cp extension.toml package/
 
           cp languages/cangjie/*.wasm package/grammars/
