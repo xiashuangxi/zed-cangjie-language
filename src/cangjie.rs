@@ -30,7 +30,7 @@ impl CangjieExtension {
             .ok()
             .and_then(|lsp_settings| lsp_settings.binary )
             .and_then(|binary| binary.path.close())
-            .unwrap_or_default()
+            .unwrap_or_default);
         return Ok(CangjieBinary{
             path: path,
             args: Some(args),
