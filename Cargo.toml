@@ -1,6 +1,7 @@
 [package]
 name = "cangjie_zed_language"
 version = "0.0.1"
+edition = "2021"
 publish = false
 license = "MIT"
 
