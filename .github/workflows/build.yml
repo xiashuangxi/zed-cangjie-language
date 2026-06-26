@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v
+      - uses: actions/checkout@v4
 
       - name: 安装 rust 工具链
         uses: actions-rs/toolchain@v1
