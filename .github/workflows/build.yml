@@ -1,0 +1,65 @@
+name: Build Wasm
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v
+
+      - name: 安装 rust 工具链
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-wasip1
+          override: true
+
+      - name: 构建 Release 版本
+        run: cargo build --target wasm32-wasip1 --release
+
+      - name: 安装 Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装 tree-sitter cli
+        run: npm install -g tree-sitter-cli
+
+      - name: 安装 emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 'latest'
+
+      - name: 生成 wasm
+        working-directory: languages/cangjie
+        run: |
+          tree-sitter generate
+          tree-sitter build --wasm
+
+      - name: 打包
+        run: |
+          mkdir -p package/grammars
+          mkdir -p package/languages/cangjie
+
+          cp target/wasm32-wasip1/release/*.wasm package/extension.wasm
+          cp extension.toml package/
+
+          cp languages/cangjie/*.wasm package/grammars/
+
+          rsync -av --exclude='grammar.js' languages/cangjie/ package/languages/cangjie/
+
+      - name: 生成 zip 文件
+        run: |
+          cd package
+          zip -r ../extension-package.zip .
+
+      - name: 上传 zip 文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-package
+          path: extension-package.zip
