@@ -10,7 +10,7 @@ struct CangjieExtension;
 
 impl zed::Extension for CangjieExtension {
     fn new() -> Self {
-        Self::new()
+        Self
     }
 
     fn language_server_command(
@@ -21,8 +21,7 @@ impl zed::Extension for CangjieExtension {
 
         let config = LspSettings::for_worktree("cangjie_language_server", worktree)?;
         let binary = config.binary.as_ref();
-        let path = binary.get("path")
-            .and_then(|p| p.as_str());
+        let path = binary.path.as_ref();
 
         Ok(zed::Command {
             command: path.to_string(),
