@@ -26,7 +26,8 @@ jobs:
         run: |
             cargo fetch
             cargo update
-            cargo build --target wasm32-wasip1 --release --verbose
+            # cargo build --target wasm32-wasip1 --release --verbose
+            cargo build --release
 
       - name: 安装 Nodejs
         uses: actions/setup-node@v4
