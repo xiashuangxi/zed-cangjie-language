@@ -19,10 +19,15 @@ impl zed::Extension for CangjieExtension {
         worktree: &zed::Worktree,
     ) -> Result<zed::Command> {
 
-        let config = LspSettings::for_worktree("cangjie_language_server", worktree)?;
-        let binary = config.binary.as_ref();
-        let path = binary.get("path")
-            .and_then(|p| p.as_ref());
+        // let config = LspSettings::for_worktree("cangjie_language_server", worktree)?;
+        // let binary = config.binary.as_ref();
+        // let path = binary.get("path")
+        //     .and_then(|p| p.as_ref());
+
+        let path = LspSettings::::for_worktree("cangjie_language_server", worktree)
+            .and_then( |lsp_setting| lsp_setting.binary )
+            .and_then( |binary| binary.path)
+            .as_ref();
 
         Ok(zed::Command {
             command: path.to_string(),
