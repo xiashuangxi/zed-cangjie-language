@@ -26,7 +26,7 @@ impl zed::Extension for CangjieExtension {
 
         let path = LspSettings::for_worktree("cangjie_language_server", worktree)
             .and_then( |lsp_setting| Ok(lsp_setting.binary ))
-            .and_then( |binary| binary.path)
+            .and_then( |binary| binary.unwrap().path)
             .as_ref();
 
         Ok(zed::Command {
