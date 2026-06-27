@@ -27,7 +27,8 @@ jobs:
             cargo fetch
             cargo update
             # cargo build --target wasm32-wasip1 --release --verbose
-            cargo build --release
+            # cargo build --release
+            cargo build --target wasm32-wasip2 --release
 
       - name: 安装 Nodejs
         uses: actions/setup-node@v4
@@ -57,7 +58,8 @@ jobs:
           mkdir -p package/languages/cangjie
 
           # cp target/wasm32-wasip1/release/*.wasm package/extension.wasm
-          cp target/release/*.wasm package/extension.wasm
+          # cp target/release/*.wasm package/extension.wasm
+          cp target/wasm32-wasip2/release/*.wasm package/extension.wasm
           cp extension.toml package/
 
           cp languages/cangjie/*.wasm package/grammars/
