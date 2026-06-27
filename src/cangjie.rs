@@ -25,12 +25,12 @@ impl zed::Extension for CangjieExtension {
         //     .and_then(|p| p.as_ref());
 
         let path = LspSettings::for_worktree("cangjie_language_server", worktree)
-            .and_then( |lsp_setting| lsp_setting.binary )
-            .and_then( |binary| Ok(binary.path))
+            .and_then( |lsp_setting| Ok(lsp_setting.binary ))
+            .and_then( |binary| binary.path)
             .as_ref();
 
         Ok(zed::Command {
-            command: path.to_string(),
+            command: path?.to_string(),
             args: vec![
                 "src".to_string(),
                 "--disableAutoImport".to_string(),
