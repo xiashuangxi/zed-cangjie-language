@@ -15,18 +15,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: 安装 rust 工具链
-      #   # uses: actions-rs/toolchain@v1
-      #   uses: actions-rust-lang/setup-rust-toolchain@v1
-      #   with:
-      #     toolchain: stable
-      #     target: wasm32-wasip1
+      - name: 安装 rust 工具链
+        # uses: actions-rs/toolchain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-wasip1
 
-      # - name: 构建 Release 版本
-      #   run: |
-      #       cargo fetch
-      #       cargo update
-      #       cargo build --target wasm32-wasip1 --release --verbose
+      - name: 构建 Release 版本
+        run: |
+            cargo fetch
+            cargo update
+            cargo build --target wasm32-wasip1 --release --verbose
 
       - name: 安装 Nodejs
         uses: actions/setup-node@v4
