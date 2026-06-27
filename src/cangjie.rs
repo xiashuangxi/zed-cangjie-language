@@ -1,15 +1,14 @@
-use std::collections::HashMap;
 use zed_extension_api::{
     self as zed,
     settings::LspSettings,
     LanguageServerId,
     Result,
 };
+use serde_json::json;
 
 struct CangjieExtension;
 
 impl zed::Extension for CangjieExtension {
-    // 必须实现 new 方法
     fn new() -> Self {
         Self
     }
@@ -25,17 +24,20 @@ impl zed::Extension for CangjieExtension {
             "--enable-log=true".to_string(),
         ];
 
-        // 从工作区配置中读取 LSP 二进制路径，若未配置则使用默认路径（或空字符串）
-        let path = LspSettings::for_worktree("cangjie_language_server", worktree)
+        // 从工作区配置中读取 LSP 二进制路径，若无则使用默认命令名
+        let binary_option = LspSettings::for_worktree("cangjie_language_server", worktree)
             .ok()
-            .and_then(|lsp_settings| lsp_settings.binary)
-            .map(|binary| binary.path)
-            .unwrap_or_else(|| "cangjie_language_server".to_string()); // 可替换为实际默认命令
+            .and_then(|settings| settings.binary)
+            .map(|binary| binary.path);
+        let path = match binary_option {
+            Some(p) => p,
+            None => "cangjie_language_server".to_string(),
+        };
 
         Ok(zed::Command {
             command: path,
             args,
-            env: HashMap::new(), // 根据需要设置环境变量
+            env: vec![], // 环境变量列表，格式为 Vec<(String, String)>
         })
     }
 
@@ -44,8 +46,8 @@ impl zed::Extension for CangjieExtension {
         _language_server_id: &zed::LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // 返回 LSP 的配置 JSON，这里返回空对象；可根据需要从 worktree 读取配置
-        Ok(Some(serde_json::json!({})))
+        // 返回空的 JSON 对象，可根据需求自定义配置
+        Ok(Some(json!({})))
     }
 }
 
