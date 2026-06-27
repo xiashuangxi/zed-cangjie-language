@@ -1,10 +1,5 @@
-use zed_extension_api::{
-    self as zed,
-    settings::LspSettings,
-    LanguageServerId,
-    Result,
-};
 use serde_json::json;
+use zed_extension_api::{self as zed, settings::LspSettings, LanguageServerId, Result};
 
 struct CangjieExtension;
 
@@ -18,25 +13,22 @@ impl zed::Extension for CangjieExtension {
         _language_server_id: &LanguageServerId,
         worktree: &zed::Worktree,
     ) -> Result<zed::Command> {
+        let lsp_settings = LspSettings::for_worktree("cangjie_language_server", worktree)?;
 
-        // let config = LspSettings::for_worktree("cangjie_language_server", worktree)?;
-        // let binary = config.binary.as_ref();
-        // let path = binary.get("path")
-        //     .and_then(|p| p.as_ref());
-
-        let path = LspSettings::for_worktree("cangjie_language_server", worktree)
-            .and_then( |lsp_setting| Ok(lsp_setting.binary ))
-            .and_then( |binary| binary.unwrap().path)
-            .as_ref();
+        let path = lsp_settings
+            .binary
+            .ok_or_else(|| "Missing binary settings in LSP configuration".to_string())?
+            .path
+            .ok_or_else(|| "Missing path in binary settings".to_string())?;
 
         Ok(zed::Command {
-            command: path?.to_string(),
+            command: path,
             args: vec![
                 "src".to_string(),
                 "--disableAutoImport".to_string(),
                 "--enable-log=true".to_string(),
             ],
-            env: vec![], // 环境变量列表，格式为 Vec<(String, String)>
+            env: vec![],
         })
     }
 
@@ -45,7 +37,6 @@ impl zed::Extension for CangjieExtension {
         _language_server_id: &zed::LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<Option<zed::serde_json::Value>> {
-        // 返回空的 JSON 对象，可根据需求自定义配置
         Ok(Some(json!({})))
     }
 }
